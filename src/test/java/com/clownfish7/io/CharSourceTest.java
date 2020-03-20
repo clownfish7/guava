@@ -26,4 +26,10 @@ public class CharSourceTest {
         Assertions.assertEquals(charSource.length(),14L);
         Assertions.assertEquals(charSource.lengthIfKnown().get(),14L);
     }
+
+    @Test
+    public void testConcat() throws IOException {
+        CharSource charSource = CharSource.concat(CharSource.wrap("no1"), CharSource.wrap("no2"));
+        System.out.println(charSource.read());
+    }
 }
