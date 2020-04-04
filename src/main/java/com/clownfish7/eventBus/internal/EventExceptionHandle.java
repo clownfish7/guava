@@ -7,4 +7,6 @@ package com.clownfish7.eventBus.internal;
  * @create 2020-03-27 12:01 PM
  */
 public interface EventExceptionHandle {
+
+    void handle(Throwable cause, EventContext context);
 }

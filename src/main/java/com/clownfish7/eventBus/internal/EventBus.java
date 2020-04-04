@@ -1,5 +1,7 @@
 package com.clownfish7.eventBus.internal;
 
+import java.util.concurrent.Executor;
+
 /**
  * @author yzy
  * @classname EventBus
@@ -16,17 +18,26 @@ public class EventBus implements Bus {
 
     public static final String DEFAULT_TOPIC = "default-topic";
 
-//    private final EventExceptionHandle eventExceptionHandle;
+    private final EventExceptionHandle eventExceptionHandle;
 
     private final Dispatcher dispatcher;
 
     public EventBus() {
-        this(DEFAULT_BUS_NAME, new Dispatcher(null, null));
+        this(DEFAULT_BUS_NAME);
     }
 
-    public EventBus(String busName, Dispatcher dispatcher) {
+    public EventBus(String busName) {
+        this(busName, null, Dispatcher.SEQ_EXECUTOR_SERVICE);
+    }
+
+    public EventBus(EventExceptionHandle eventExceptionHandle) {
+        this(DEFAULT_BUS_NAME, eventExceptionHandle, Dispatcher.SEQ_EXECUTOR_SERVICE);
+    }
+
+    protected EventBus(String busName, EventExceptionHandle eventExceptionHandle, Executor executor) {
         this.busName = busName;
-        this.dispatcher = dispatcher;
+        this.eventExceptionHandle = eventExceptionHandle;
+        this.dispatcher = Dispatcher.dispatcher(eventExceptionHandle, executor);
     }
 
     @Override

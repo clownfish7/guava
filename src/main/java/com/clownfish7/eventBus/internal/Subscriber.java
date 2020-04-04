@@ -12,6 +12,7 @@ public class Subscriber {
 
     private final Object subscribeObject;
     private final Method subscribeMethod;
+    private boolean disable = false;
 
     public Subscriber(Object subscribeObject, Method subscribeMethod) {
         this.subscribeObject = subscribeObject;
@@ -24,5 +25,13 @@ public class Subscriber {
 
     public Method getSubscribeMethod() {
         return subscribeMethod;
+    }
+
+    public boolean isDisable() {
+        return disable;
+    }
+
+    public void setDisable(boolean disable) {
+        this.disable = disable;
     }
 }
