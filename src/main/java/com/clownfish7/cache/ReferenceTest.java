@@ -1,8 +1,9 @@
 package com.clownfish7.cache;
 
-import java.lang.ref.PhantomReference;
-import java.lang.ref.Reference;
-import java.lang.ref.ReferenceQueue;
+import java.lang.ref.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author You
@@ -11,55 +12,13 @@ import java.lang.ref.ReferenceQueue;
 public class ReferenceTest {
 
     public static void main(String[] args) throws InterruptedException {
-        //Strong Reference
-        /*int counter = 1;
+        strongReference();
+        softReference();
+        weakReference();
+        phantomReference();
+    }
 
-        List<Ref> container = new ArrayList<>();
-
-        for (; ; )
-        {
-            int current = counter++;
-            container.add(new Ref(current));
-            System.out.println("The " + current + " Ref will be insert into container");
-            TimeUnit.MILLISECONDS.sleep(500);
-        }*/
-
-//        SoftReference<Ref> reference = new SoftReference<>(new Ref(0));
-
-        /**
-         * detected the JVM process will be OOM then try to GC soft reference.
-         */
-
-        //soft reference
-       /* int counter = 1;
-
-        List<SoftReference<Ref>> container = new ArrayList<>();
-
-        for (; ; )
-        {
-            int current = counter++;
-            container.add(new SoftReference<>(new Ref(current)));
-            System.out.println("The " + current + " Ref will be insert into container");
-            TimeUnit.SECONDS.sleep(1);
-        }*/
-
-        /**
-         * Weak reference
-         *
-         * The reference will be collected when GC.
-         */
-        /*int counter = 1;
-
-        List<WeakReference<Ref>> container = new ArrayList<>();
-
-        for (; ; )
-        {
-            int current = counter++;
-            container.add(new WeakReference<>(new Ref(current)));
-            System.out.println("The " + current + " Ref will be insert into container");
-            TimeUnit.MILLISECONDS.sleep(200);
-        }*/
-
+    private static void phantomReference() throws InterruptedException {
         Ref ref = new Ref(10);
         ReferenceQueue queue = new ReferenceQueue<>();
         MyPhantomReference reference = new MyPhantomReference(ref, queue, 10);
@@ -82,6 +41,53 @@ public class ReferenceTest {
          * File file = new File();
          * file.create();
          */
+    }
+
+    /**
+     * Weak reference
+     * The reference will be collected when GC.
+     */
+    private static void weakReference() throws InterruptedException {
+
+        int counter = 1;
+
+        List<WeakReference<Ref>> container = new ArrayList<>();
+
+        for (; ; ) {
+            int current = counter++;
+            container.add(new WeakReference<>(new Ref(current)));
+            System.out.println("The " + current + " Ref will be insert into container");
+            TimeUnit.MILLISECONDS.sleep(200);
+        }
+    }
+
+    private static void softReference() throws InterruptedException {
+        int counter = 1;
+
+        List<SoftReference<Ref>> container = new ArrayList<>();
+
+        for (; ; ) {
+            int current = counter++;
+            container.add(new SoftReference<>(new Ref(current)));
+            System.out.println("The " + current + " Ref will be insert into container");
+            TimeUnit.SECONDS.sleep(1);
+        }
+    }
+
+    /**
+     * detected the JVM process will be OOM then try to GC soft reference.
+     */
+    private static void strongReference() throws InterruptedException {
+        int counter = 1;
+
+        List<Ref> container = new ArrayList<>();
+
+        for (; ; ) {
+            int current = counter++;
+            container.add(new Ref(current));
+            System.out.println("The " + current + " Ref will be insert into container");
+            TimeUnit.MILLISECONDS.sleep(500);
+        }
     }
 
     private static class MyPhantomReference extends PhantomReference<Object> {
